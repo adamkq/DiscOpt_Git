@@ -111,15 +111,17 @@ def solve_it(input_data):
 
 # ideas:
 # assign f's accroding to their relative spacing, rather than just going with the lowest-cost f every time. Make sure that the next f to be assigned includes the unassigned point closest to the average of all assigned f's.
-    print("Facilities: %d") % (len(facilities))
-    print("Customers: %d") % (len(customers))
+
     
 
     solution = [-1]*len(customers)
     capacity_remaining = [f.capacity for f in facilities]
     avg_point = find_avg_point(customers)
-    print("Average Point: ", avg_point)
+
+    print(f"Facilities: {len(facilities)}, Customers: {len(customers)}")
+    print(f"Average Point: {avg_point}")
     print("Building Distance Table...")
+
     distance_table = build_distance_table(facilities,customers)
     f_cpc = [f.setup_cost for f in facilities]
     f_lcs = [0]*len(facilities)
@@ -134,7 +136,7 @@ def solve_it(input_data):
             if not any(f_assigned) or (not f_assigned[facility.index] and max([solution[c.index] for c in f_lcs[facility.index]]) > -1):
                 # condition should only evaluate f's whose sets were affected by the previous assignment
                 low_cost_set = get_low_cost_set(distance_table, facility, list(customers), list(solution))
-                cost_of_setup = get_cost_of_setup(facility, low_cost_set)
+                cost_of_setup = get_cost_of_setup(facility, low_cost_set) - 0 * facility.setup_cost
                 f_cpc[facility.index] = cost_of_setup/max(len(low_cost_set),1)
                 f_lcs[facility.index] = low_cost_set
             # we can try either assigning the lowest-cost f, or assigning the f with the lowest cost-per-customer
@@ -156,10 +158,9 @@ def solve_it(input_data):
         f_assigned[f_low] = 1
 
     obj2 = get_obj_value(distance_table, facilities, customers, solution, f_assigned)
-    print(obj, obj2)
-    print("Total Facilities Assigned: %d/%d") % (sum(f_assigned), len(facilities))
-    print("Average Cost per Facility: %f") % (obj/sum(f_assigned))
-    print("Average Cost per Customer: %f") % (obj/len(customers))
+    print(f"Total Facilities Assigned: {sum(f_assigned)} of {len(facilities)}")
+    print(f"Average Cost per Facility: {round(obj/sum(f_assigned),2)}")
+    print(f"Average Cost per Customer: {round(obj/len(customers),2)}")
 
     # trivial solution
 #    facility_index = 0

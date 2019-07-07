@@ -105,15 +105,21 @@ def solve_it(input_data):
 
     avg_point = Point(x_avg, y_avg)
 
-    # greedy + 2-opt results (low quality, high quality):
-    # 448 (482, 430), 23097 (23433, 20800), 32723 (35985, 30000), 39704 (40000, 37600), 361K (378K, 323K), 78.4M (78.5M, 67.7M)
-
-    print("Points: %d") % (nodeCount)
-    print("Average Point: %f, %f") % (x_avg, y_avg)
+# greedy + 2-opt results (low quality, high quality):
+# 1. 448 (482, 430),
+# 2. 23097 (23433, 20800)
+# 3. 32723 (35985, 30000)
+# 4. 39704 (40000, 37600)
+# 5. 361K (378K, 323K)
+# 6. 78.4M (78.5M, 67.7M)
 
     solution = list(range(0,nodeCount)) # trivial; this is actually the best for tc_574_1
     best_total_length = get_total_length(points, solution)
-    print("Default: %f") % (best_total_length)
+
+    print(f"Points: {nodeCount}")
+    print(f"Average Point: {x_avg}, {y_avg}")
+    print(f"Default: {best_total_length}")
+
     step = 1
     threshold = 574 # number of nodes to be considered 'large'
     max_nodes = 33810 # only the 30K dataset is this big
@@ -122,27 +128,28 @@ def solve_it(input_data):
     if nodeCount >= max_nodes:
         step = 10000
 
-    print("Step: %d") % (step)
+    print(f"Step: {step}")
     for seed in range(0,nodeCount,step):
         if nodeCount >= max_nodes:
-            print("Starting seed: %d") % (seed)
+            print(f"Starting seed: {seed}")
         solution_seed = get_greedy_from_seedy(points, [seed])
         if nodeCount < threshold:
             solution_seed = opt2(points, solution_seed)
         test_length = get_total_length(points, solution_seed)
-        print("Seed %d: %f") % (seed, test_length)
+        print(f"Seed {seed}: {round(test_length,2)}")
         if test_length < best_total_length:
             solution = list(solution_seed)
             best_total_length = test_length
             print("NEW BEST")
 
-    print("Best Path Length from greedy: %f") % (best_total_length)
+    print(f"Best Path Length from greedy: {best_total_length}")
 
 
     for i in range(0,threshold,int(nodeCount/2)):
         print("Starting 2-opt again...")
         solution = opt2(points, solution)
 
+    print("Solution Found:")
     # calculate the length of the tour
     obj = length(points[solution[-1]], points[solution[0]])
     for index in range(0, nodeCount-1):

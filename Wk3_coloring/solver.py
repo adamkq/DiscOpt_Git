@@ -90,8 +90,8 @@ def solve_it(input_data):
     best_solution = range(0, node_count)
     graph_neighbors = build_graph_neighbors(node_count, edges)
 
-    print("NODES: %d, EDGES: %d") % (node_count,len(edges))
-    print("(ATTEMPT No., OBJ. VALUE)")
+    print(f"Nodes: {node_count}, Edges: {len(edges)}")
+    print("Attempt No., Obj. Value")
     for attempt in range(min(int(3001/node_count),50)): # will iterate at least 3 times
         c_number = 2 # lower bound for any graph where all nodes have at least 1 edge
         graph_colors = [] # lists possible colors for each unassigned node
@@ -124,7 +124,7 @@ def solve_it(input_data):
             best_c_number = c_number
             best_solution = solution
 
-    print("Best Solution Found (chromatic number, 0, and a vector of assigned colors):")
+    print("Best Solution Found:")
     color_count = best_c_number
     solution = best_solution
 
